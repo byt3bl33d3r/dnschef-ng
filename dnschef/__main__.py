@@ -32,7 +32,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from dnschef.logger import log, plain_formatter
+from dnschef.logger import log, plain_formatter, debug_formatter
 from dnschef.kitchen import nametodns, start_cooking
 from dnschef.utils import header, parse_config_file
 
@@ -75,6 +75,7 @@ def main():
 
     if options.verbose:
         log.setLevel(logging.DEBUG)
+        log.handlers[0].setFormatter(debug_formatter)
         log.debug("running in verbose mode")
 
     if not (options.fakeip or options.fakeipv6) and (options.fakedomains or options.truedomains):

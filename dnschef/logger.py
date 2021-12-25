@@ -9,33 +9,29 @@ install(show_locals=True)
 capturer = structlog.testing.LogCapture()
 timestamper = structlog.processors.TimeStamper(fmt="%Y-%m-%d %H:%M:%S")
 
-pre_chain = [
-    # Add the log level and a timestamp to the event_dict if the log entry
-    # is not from structlog.
-    structlog.stdlib.add_log_level,
-    # Add extra attributes of LogRecord objects to the event dictionary
-    # so that values passed in the extra parameter of log methods pass
-    # through to log output.
-    structlog.stdlib.ExtraAdder(),
-    timestamper,
-]
-
 plain_formatter = structlog.stdlib.ProcessorFormatter(
     processors = [
         structlog.stdlib.ProcessorFormatter.remove_processors_meta,
-        structlog.stdlib.add_log_level,
+        #structlog.stdlib.add_log_level,
         structlog.dev.ConsoleRenderer(colors=False),
-    ],
-    foreign_pre_chain = pre_chain
+    ]
 )
 
 colored_formatter = structlog.stdlib.ProcessorFormatter(
     processors = [
         structlog.stdlib.ProcessorFormatter.remove_processors_meta,
-        structlog.stdlib.add_log_level,
+        #structlog.stdlib.add_log_level,
         structlog.dev.ConsoleRenderer(colors=True, exception_formatter=structlog.dev.rich_traceback),
-    ],
-    foreign_pre_chain = pre_chain
+    ]
+)
+
+debug_formatter = structlog.stdlib.ProcessorFormatter(
+    processors = [
+        structlog.stdlib.ProcessorFormatter.remove_processors_meta,
+        structlog.stdlib.add_log_level,
+        #structlog.stdlib.add_logger_name,
+        structlog.dev.ConsoleRenderer(colors=True, exception_formatter=structlog.dev.rich_traceback),
+    ]
 )
 
 json_capture_formatter = structlog.stdlib.ProcessorFormatter(
@@ -43,8 +39,7 @@ json_capture_formatter = structlog.stdlib.ProcessorFormatter(
         structlog.stdlib.ProcessorFormatter.remove_processors_meta,
         capturer,
         structlog.processors.JSONRenderer(),
-    ],
-    foreign_pre_chain = pre_chain
+    ]
 )
 
 sh = logging.StreamHandler()
