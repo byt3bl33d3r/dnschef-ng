@@ -11,7 +11,7 @@ from enum import Enum
 from typing import Optional, List
 
 from fastapi import FastAPI
-from pydantic import BaseModel, BaseSettings #,IPvAnyAddress
+from pydantic import BaseModel, BaseSettings, FilePath #,IPvAnyAddress
 from dnslib import RDMAP
 
 import logging
@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     ipv6: bool = False
     tcp: bool = False
     port: int = 53
+    configfile: FilePath = "dnschef.ini"
 
 settings = Settings()
 app = FastAPI()
@@ -38,7 +39,7 @@ app = FastAPI()
 @app.on_event("startup")
 async def startup_event():
     print(header)
-    parse_config_file()
+    parse_config_file(settings.configfile)
 
     # Log to file
     fh = logging.handlers.WatchedFileHandler("dnschef.log")

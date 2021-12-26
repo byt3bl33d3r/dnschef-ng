@@ -14,6 +14,8 @@ COPY --from=build-stage /tmp/code/dist/ .
 
 RUN pip install --no-cache-dir --no-index --find-links . dnschef[api]
 
+EXPOSE 80 53/udp 53/tcp
+
 CMD ["uvicorn", "dnschef.api:app", "--host", "0.0.0.0", "--port", "80"]
 
 # If using a proxy

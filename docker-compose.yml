@@ -1,0 +1,20 @@
+
+version: "3"
+services:
+  dnschef:
+    image: dnschef:latest
+    container_name: dnschef
+    ports:
+      - "53:53/udp"
+      - "53:53/tcp"
+    expose:
+      - "80"
+    volumes:
+      - dnschef.ini:/etc/dnschef.ini
+    environment:
+      - INTERFACE=0.0.0.0
+      - NAMESERVERS=8.8.8.8
+      - PORT=53
+      - TCP=false
+      - IPV6=false
+      - CONFIGFILE=/etc/dnschef.ini

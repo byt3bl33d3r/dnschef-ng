@@ -14,6 +14,7 @@ header += "                            @byt3bl33d3r  \n"
 
 
 def parse_config_file(config_file: str = "dnschef.ini"):
+    log.debug("Parsing config file", path=config_file)
     config = ConfigParser()
     config.read(config_file)
     for section in config.sections():
