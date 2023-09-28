@@ -20,6 +20,7 @@ structlog = "^23.1.0"
 
 [tool.poetry.scripts]
 dnschef = 'dnschef.__main__:main'
+dnschef-ng = 'dnschef.__main__:main'
 
 [tool.poetry.group.api.dependencies]
 fastapi = "^0.103.1"

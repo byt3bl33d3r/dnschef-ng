@@ -28,6 +28,11 @@ class DNSKitchen:
         ipv6_hex_tuple = list(map(int, ip_address(record).packed))
         return RR(qname, getattr(QTYPE, qtype), rdata=RDMAP[qtype](ipv6_hex_tuple))
 
+    async def do_HTTPS(self, addr, record, qname, qtype):
+        kv_pairs = record.split(" ")
+        mydata = RDMAP[qtype].fromZone(kv_pairs)
+        return RR(qname, getattr(QTYPE, qtype), rdata=mydata)
+
     async def do_SOA(self, addr, record, qname, qtype):
         mname, rname, t1, t2, t3, t4, t5 = record.split(" ")
         times = tuple([int(t) for t in [t1, t2, t3, t4, t5]])
