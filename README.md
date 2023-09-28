@@ -1,3 +1,6 @@
+> [!NOTE]
+> This is an updated version of [DNSChef](https://github.com/iphelix/dnschef) orginally written by [@iphelix](https://github.com/iphelix)
+
 ```
       _                _          __ 
      | | version 0.6  | |        / _|
