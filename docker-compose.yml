@@ -1,4 +1,3 @@
-
 version: "3"
 services:
   dnschef:
@@ -10,7 +9,7 @@ services:
     expose:
       - "80"
     volumes:
-      - dnschef.ini:/etc/dnschef.ini
+      - ./dnschef.ini:/etc/dnschef.ini
     environment:
       - INTERFACE=0.0.0.0
       - NAMESERVERS=8.8.8.8

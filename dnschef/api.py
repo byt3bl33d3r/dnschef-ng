@@ -11,7 +11,8 @@ from enum import Enum
 from typing import Optional, List
 
 from fastapi import FastAPI
-from pydantic import BaseModel, BaseSettings, FilePath #,IPvAnyAddress
+from pydantic_settings import BaseSettings
+from pydantic import BaseModel, FilePath #,IPvAnyAddress
 from dnslib import RDMAP
 
 import logging

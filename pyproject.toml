@@ -1,47 +1,37 @@
 [tool.poetry]
 name = "dnschef"
-version = "0.6"
-description = "DNSChef is a highly configurable DNS Proxy for Penetration Testers and Malware Analysts"
-authors = ["Marcello Salvati <byt3bl33d3r@pm.me>"]
+version = "0.6.0"
+description = "A highly configurable DNS proxy for Penetration Testers and Malware Analysts"
+authors = ["iphelix <iphelix@thesprawl.org>","byt3bl33d3r <byt3bl33d3r@pm.me>"]
 readme = "README.md"
-homepage = "https://github.com/Porchetta-Industries/dnschef"
-repository = "https://github.com/Porchetta-Industries/dnschef"
-exclude = ["tests"]
-include = ["LICENSE"]
-license = ""
+license = "BSD-3-Clause"
 classifiers = [
     "Environment :: Console",
     "Programming Language :: Python :: 3",
     "Topic :: Security",
 ]
+exclude = ["tests"]
 
-packages = [
-    { include = "dnschef"}
-]
+[tool.poetry.dependencies]
+python = "^3.10"
+dnslib = "^0.9.23"
+rich = "^13.5.3"
+structlog = "^23.1.0"
 
 [tool.poetry.scripts]
 dnschef = 'dnschef.__main__:main'
 
-[tool.poetry.dependencies]
-python = "^3.8.0"
-dnslib = "^0.9.16"
-rich = "^10.16.1"
-structlog = "^21.5.0"
-fastapi = { version = "^0.70.1", optional = true }
-uvicorn = { version = "^0.16.0", optional = true }
+[tool.poetry.group.api.dependencies]
+fastapi = "^0.103.1"
+uvicorn = "^0.23.2"
+pydantic-settings = "^2.0.3"
 
-[tool.poetry.extras]
-api = ["fastapi", "uvicorn"]
-
-[tool.poetry.dev-dependencies]
-pytest = "*"
-pytest-asyncio = "*"
-flake8 = "*"
-black = "*"
-icecream = "*"
-uvicorn = "^0.16.0"
-httpie = "^2.6.0"
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.2"
+pytest-asyncio = "^0.21.1"
+flake8 = "^6.1.0"
+black = "^23.9.1"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

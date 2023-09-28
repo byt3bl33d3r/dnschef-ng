@@ -10,7 +10,7 @@ header += "       __| |_ __  ___  ___| |__   ___| |_ \n"
 header += "      / _` | '_ \/ __|/ __| '_ \ / _ \  _|\n"
 header += "     | (_| | | | \__ \ (__| | | |  __/ |  \n"
 header += "      \__,_|_| |_|___/\___|_| |_|\___|_|  \n"
-header += "                            @byt3bl33d3r  \n"
+header += "                @iphelix // @byt3bl33d3r  \n"
 
 
 def parse_config_file(config_file: str = "dnschef.ini"):
