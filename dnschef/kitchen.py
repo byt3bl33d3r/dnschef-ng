@@ -4,6 +4,7 @@ from dnslib import *
 from ipaddress import ip_address
 from typing import List
 
+import re
 import socket
 import asyncio
 import functools
@@ -180,7 +181,7 @@ class DNSServerProtocol:
                 else:
                     logger.info(f"proxying response", type=qtype, name=qname)
 
-                    nameserver_tuple = random.choice(self.nameservers).split('#')
+                    nameserver_tuple = re.split('[:#]', random.choice(self.nameservers))
 
                     task = asyncio.create_task(proxyrequest(data, *nameserver_tuple))
                     task.add_done_callback(functools.partial(lambda c, t, a: t.sendto(c.result(), a), t=self.transport, a=addr))
