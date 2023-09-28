@@ -162,24 +162,17 @@ class DNSServerProtocol:
                     fake_record = fake_records[qtype]
                     logger.info(f"cooking response", type=qtype, name=qname, record=fake_record)
 
-                    try:
-                        response_func = getattr(self.dnsresponses, f"do_{qtype}")
-                    except AttributeError:
-                        response_func = getattr(self.dnsresponses, "do_default")
+                    response_func = getattr(self.dnsresponses, f"do_{qtype}", "do_default")
 
                     task = asyncio.create_task(response_func(addr, fake_record, qname, qtype))
                     task.add_done_callback(functools.partial(self.send_response, response=response, addr=addr))
 
-                elif qtype == "*" and None not in list(fake_records.values()):
+                elif (qtype == "*" or qtype == "ANY") and None not in list(fake_records.values()):
                     logger.info("cooking response with all known fake records", type='ANY', name=qname)
 
                     for qtype, fake_record in list(fake_records.items()):
                         if fake_record:
-                            try:
-                                response_func = getattr(self.dnsresponses, f"do_{qtype}")
-                            except AttributeError:
-                                response_func = getattr(self.dnsresponses, "do_default")
-
+                            response_func = getattr(self.dnsresponses, f"do_{qtype}", "do_default")
                             response.add_answer(response_func(addr, fake_record, qname, qtype))
 
                     self.transport.sendto(response.pack(), addr)
