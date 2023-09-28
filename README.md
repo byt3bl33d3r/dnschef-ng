@@ -1,14 +1,14 @@
 > [!NOTE]
-> This is an updated version of [DNSChef](https://github.com/iphelix/dnschef) orginally written by [@iphelix](https://github.com/iphelix)
+> This is an updated version of [DNSChef](https://github.com/iphelix/dnschef) originally written by [@iphelix](https://github.com/iphelix)
 
-```
-      _                _          __ 
-     | | version 0.6  | |        / _|
-   __| |_ __  ___  ___| |__   ___| |_ 
-  / _` | '_ \/ __|/ __| '_ \ / _ \  _|
- | (_| | | | \__ \ (__| | | |  __/ |  
-  \__,_|_| |_|___/\___|_| |_|\___|_|
-
+```  _                _           __                    
+    | | version 0.6  | |         / _|                   
+  __| |_ __  ___  ___| |__   ___| |_ ______ _ __   __ _ 
+ / _` | '_ \/ __|/ __| '_ \ / _ \  _|______| '_ \ / _` |
+| (_| | | | \__ \ (__| | | |  __/ |        | | | | (_| |
+ \__,_|_| |_|___/\___|_| |_|\___|_|        |_| |_|\__, |
+                                                   __/ |
+                                                  |___/ 
        D O C U M E N T A T I O N
 ```
 
@@ -17,6 +17,24 @@ DNSChef is a highly configurable DNS proxy for Penetration Testers and Malware A
 There are several DNS Proxies out there. Most will simply point all DNS queries a single IP address or implement only rudimentary filtering. DNSChef was developed as part of a penetration test where there was a need for a more configurable system. As a result, DNSChef is cross-platform application capable of forging responses based on inclusive and exclusive domain lists, supporting multiple DNS record types, matching domains with wildcards, proxying true responses for nonmatching domains, defining external configuration files, IPv6 and many other features. You can find detailed explanation of each of the features and suggested uses below.
 
 The use of DNS Proxy is recommended in situations where it is not possible to force an application to use some other proxy server directly. For example, some mobile applications completely ignore OS HTTP Proxy settings. In these cases, the use of a DNS proxy server such as DNSChef will allow you to trick that application into forwarding connections to the desired destination.
+
+# New Features 
+
+- Optional HTTP API (allows you to query logs and update config remotely)
+- Fully async for increased performance (uses AsyncIO)
+- Structured logging and a number of QOL improvements
+- Is now a Python package
+- Dockerized
+- Includes a number of the PRs and fixes from the original repo
+
+# Installing
+
+`pip install dnschef`
+
+
+If you want the HTTP API (requires some extra dependencies):
+    
+    pip install dnschef[api]
 
 # Setting up a DNS Proxy
 
@@ -87,6 +105,36 @@ DNSChef has full support for IPv6 which can be activated using *-6* or *--ipv6**
     [00:35:44] ::1: proxying the response of type 'MX' for thesprawl.org
 
 NOTE: By default, DNSChef creates a UDP listener. You can use TCP instead with the *--tcp* argument discussed later.
+
+# Running the DNSChef HTTP API
+
+> [!WARNING]
+> The API has no authentication. Allow/deny access at the network level through security groups, iptables, firewall etc..
+
+`uvicorn dnschef.api:app`
+
+You can then view the OpenAPI documentation at `http://127.0.0.1:8000/docs`
+
+```
+$ uvicorn dnschef.api:app
+INFO:     Started server process [28327]
+INFO:     Waiting for application startup.
+          _                _          __  
+         | | version 0.6.0  | |        / _| 
+       __| |_ __  ___  ___| |__   ___| |_ 
+      / _` | '_ \/ __|/ __| '_ \ / _ \  _|
+     | (_| | | | \__ \ (__| | | |  __/ |  
+      \__,_|_| |_|___/\___|_| |_|\___|_|  
+                @iphelix // @byt3bl33d3r  
+
+2023-09-28 11:24:59 cooking replies                domain=*.thesprawl.org record=192.0.2.1 section=A
+2023-09-28 11:24:59 cooking replies                domain=*.thesprawl.org record=2001:db8::1 section=AAAA
+-- SNIP --
+2023-09-28 11:24:59 cooking replies                domain=*.thesprawl.org record=1 . alpn=h2 ipv4hint=127.0.0.1 ipv6hint=::1 section=HTTPS
+INFO:     Application startup complete.
+2023-09-28 11:24:59 DNSChef is active              interface=127.0.0.1 ipv6=False nameservers=['8.8.8.8'] port=53 tcp=False
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+```
 
 # Intercept all responses
 

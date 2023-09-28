@@ -1,3 +1,4 @@
+from dnschef import __version__
 from dnschef.utils import header, parse_config_file
 from dnschef.kitchen import nametodns, start_cooking
 from dnschef.logger import (
@@ -35,7 +36,10 @@ class Settings(BaseSettings):
     configfile: FilePath = "dnschef.ini"
 
 settings = Settings()
-app = FastAPI()
+app = FastAPI(
+    title='DNSChef-NG',
+    version=__version__
+)
 
 @app.on_event("startup")
 async def startup_event():
