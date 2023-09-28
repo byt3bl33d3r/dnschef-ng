@@ -1,7 +1,8 @@
 > [!NOTE]
 > This is an updated version of [DNSChef](https://github.com/iphelix/dnschef) originally written by [@iphelix](https://github.com/iphelix)
 
-```  _                _           __                    
+``` 
+     _                _           __                    
     | | version 0.6  | |         / _|                   
   __| |_ __  ___  ___| |__   ___| |_ ______ _ __   __ _ 
  / _` | '_ \/ __|/ __| '_ \ / _ \  _|______| '_ \ / _` |
