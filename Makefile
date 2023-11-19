@@ -18,6 +18,6 @@ tests:
 	python -m pytest
 
 requirements:
-	poetry export -f requirements.txt -o requirements.txt
-	poetry export -E api -f requirements.txt -o requirements-api.txt
-	poetry export --dev -f requirements.txt -o requirements-dev.txt
+	poetry export -f requirements.txt > requirements.txt
+	poetry export -f requirements.txt --with=api > requirements-api.txt
+	poetry export -f requirements.txt --with=api,dev > requirements-dev.txt

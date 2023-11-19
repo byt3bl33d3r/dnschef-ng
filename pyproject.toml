@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dnschef"
-version = "0.6.0"
+version = "0.7.0"
 description = "A highly configurable DNS proxy for Penetration Testers and Malware Analysts"
 authors = ["iphelix <iphelix@thesprawl.org>","byt3bl33d3r <byt3bl33d3r@pm.me>"]
 readme = "README.md"
@@ -13,7 +13,7 @@ classifiers = [
 exclude = ["tests"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 dnslib = "^0.9.23"
 rich = "^13.5.3"
 structlog = "^23.1.0"
@@ -32,6 +32,7 @@ pytest = "^7.4.2"
 pytest-asyncio = "^0.21.1"
 flake8 = "^6.1.0"
 black = "^23.9.1"
+poetry-plugin-export = "^1.6.0"
 
 [build-system]
 requires = ["poetry-core"]

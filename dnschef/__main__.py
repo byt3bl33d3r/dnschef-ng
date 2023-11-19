@@ -32,8 +32,9 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from dnschef import kitchen
+
 from dnschef.logger import log, plain_formatter, debug_formatter
-from dnschef.kitchen import nametodns, start_cooking
 from dnschef.utils import header, parse_config_file
 
 from argparse import ArgumentParser
@@ -96,10 +97,9 @@ def main():
 
     # External file definitions
     if options.file:
-        parse_config_file(options.file)
+        kitchen.CONFIG = parse_config_file(options.file)
 
     # DNS Record and Domain Name definitions
-    # NOTE: '*.*.*.*.*.*.*.*.*.*' domain is used to match all possible queries.
     if options.fakeip or options.fakeipv6 or options.fakemail or options.fakealias or options.fakens:
         fakeip     = options.fakeip
         fakeipv6   = options.fakeipv6
@@ -115,23 +115,23 @@ def main():
                 domain = domain.strip()
 
                 if fakeip:
-                    nametodns["A"][domain] = fakeip
+                    kitchen.CONFIG["A"][domain] = fakeip
                     log.info(f"cooking A replies to point to {options.fakeip} matching: {domain}")
 
                 if fakeipv6:
-                    nametodns["AAAA"][domain] = fakeipv6
+                    kitchen.CONFIG["AAAA"][domain] = fakeipv6
                     log.info(f"cooking AAAA replies to point to {options.fakeipv6} matching: {domain}")
 
                 if fakemail:
-                    nametodns["MX"][domain] = fakemail
+                    kitchen.CONFIG["MX"][domain] = fakemail
                     log.info(f"cooking MX replies to point to {options.fakemail} matching: {domain}")
 
                 if fakealias:
-                    nametodns["CNAME"][domain] = fakealias
+                    kitchen.CONFIG["CNAME"][domain] = fakealias
                     log.info(f"cooking CNAME replies to point to {options.fakealias} matching: {domain}")
 
                 if fakens:
-                    nametodns["NS"][domain] = fakens
+                    kitchen.CONFIG["NS"][domain] = fakens
                     log.info(f"cooking NS replies to point to {options.fakens} matching: {domain}")
 
         elif options.truedomains:
@@ -142,53 +142,49 @@ def main():
                 domain = domain.strip()
 
                 if fakeip:
-                    nametodns["A"][domain] = False
+                    kitchen.CONFIG["A"][domain] = False
                     log.info(f"cooking A replies to point to {options.fakeip} not matching: {domain}")
-                    nametodns["A"]['*.*.*.*.*.*.*.*.*.*'] = fakeip
+                    kitchen.CONFIG["A"]['*'] = fakeip
 
                 if fakeipv6:
-                    nametodns["AAAA"][domain] = False
+                    kitchen.CONFIG["AAAA"][domain] = False
                     log.info(f"cooking AAAA replies to point to {options.fakeipv6} not matching: {domain}")
-                    nametodns["AAAA"]['*.*.*.*.*.*.*.*.*.*'] = fakeipv6
+                    kitchen.CONFIG["AAAA"]['*'] = fakeipv6
 
                 if fakemail:
-                    nametodns["MX"][domain] = False
+                    kitchen.CONFIG["MX"][domain] = False
                     log.info(f"cooking MX replies to point to {options.fakemail} not matching: {domain}")
-                    nametodns["MX"]['*.*.*.*.*.*.*.*.*.*'] = fakemail
+                    kitchen.CONFIG["MX"]['*'] = fakemail
 
                 if fakealias:
-                    nametodns["CNAME"][domain] = False
+                    kitchen.CONFIG["CNAME"][domain] = False
                     log.info(f"cooking CNAME replies to point to {options.fakealias} not matching: {domain}")
-                    nametodns["CNAME"]['*.*.*.*.*.*.*.*.*.*'] = fakealias
+                    kitchen.CONFIG["CNAME"]['*'] = fakealias
 
                 if fakens:
-                    nametodns["NS"][domain] = False
+                    kitchen.CONFIG["NS"][domain] = False
                     log.info(f"cooking NS replies to point to {options.fakens} not matching: {domain}")
-                    nametodns["NS"]['*.*.*.*.*.*.*.*.*.*'] = fakealias
+                    kitchen.CONFIG["NS"]['*'] = fakealias
 
         else:
-
-            # NOTE: '*.*.*.*.*.*.*.*.*.*' domain is a special ANY domain
-            #       which is compatible with the wildflag algorithm above.
-
             if fakeip:
-                nametodns["A"]['*.*.*.*.*.*.*.*.*.*'] = fakeip
+                kitchen.CONFIG["A"]['*'] = fakeip
                 log.info(f"cooking all A replies to point to {fakeip}")
 
             if fakeipv6:
-                nametodns["AAAA"]['*.*.*.*.*.*.*.*.*.*'] = fakeipv6
+                kitchen.CONFIG["AAAA"]['*'] = fakeipv6
                 log.info(f"cooking all AAAA replies to point to {fakeipv6}")
 
             if fakemail:
-                nametodns["MX"]['*.*.*.*.*.*.*.*.*.*'] = fakemail
+                kitchen.CONFIG["MX"]['*'] = fakemail
                 log.info(f"cooking all MX replies to point to {fakemail}")
 
             if fakealias:
-                nametodns["CNAME"]['*.*.*.*.*.*.*.*.*.*'] = fakealias
+                kitchen.CONFIG["CNAME"]['*'] = fakealias
                 log.info(f"cooking all CNAME replies to point to {fakealias}")
 
             if fakens:
-                nametodns["NS"]['*.*.*.*.*.*.*.*.*.*'] = fakens
+                kitchen.CONFIG["NS"]['*'] = fakens
                 log.info(f"cooking all NS replies to point to {fakens}")
 
     # Proxy all DNS requests
@@ -206,7 +202,7 @@ def main():
         log.addHandler(fh)
 
     # Launch DNSChef
-    asyncio.run(start_cooking(
+    asyncio.run(kitchen.start_cooking(
         interface=options.interface,
         nameservers=nameservers,
         tcp=options.tcp,

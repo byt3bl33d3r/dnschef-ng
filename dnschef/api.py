@@ -1,6 +1,6 @@
 from dnschef import __version__
+from dnschef import kitchen
 from dnschef.utils import header, parse_config_file
-from dnschef.kitchen import nametodns, start_cooking
 from dnschef.logger import (
     log,
     plain_formatter,
@@ -44,7 +44,7 @@ app = FastAPI(
 @app.on_event("startup")
 async def startup_event():
     print(header)
-    parse_config_file(settings.configfile)
+    kitchen.CONFIG = parse_config_file(settings.configfile)
 
     # Log to file
     fh = logging.handlers.WatchedFileHandler("dnschef.log")
@@ -58,7 +58,7 @@ async def startup_event():
 
     # Launch DNSChef
     asyncio.create_task(
-        start_cooking(
+        kitchen.start_cooking(
             interface=settings.interface,
             nameservers=settings.nameservers,
             tcp=settings.tcp,
@@ -76,19 +76,19 @@ async def shutdown_event():
 
 @app.put("/")
 async def add_record(record: Record):
-    nametodns[record.type.value][record.domain] = record.value
+    kitchen.CONFIG[record.type.value][record.domain] = record.value
     return 200
 
 
 @app.delete("/")
 async def delete_record(record: Record):
-    del nametodns[record.type.value][record.domain]
+    del kitchen.CONFIG[record.type.value][record.domain]
     return 200
 
 
 @app.get("/")
 async def get_records():
-    return nametodns
+    return kitchen.CONFIG
 
 
 @app.get("/logs")
