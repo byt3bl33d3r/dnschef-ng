@@ -21,6 +21,9 @@ The use of DNS Proxy is recommended in situations where it is not possible to fo
 
 # New Features 
 
+- Requires Python 3.11+
+- Supports staging files over DNS (A,AAAA,TXT for now...)
+- Config file is now TOML
 - Optional HTTP API (allows you to query logs and update config remotely)
 - Fully async for increased performance (uses AsyncIO)
 - Structured logging and a number of QOL improvements
@@ -30,8 +33,17 @@ The use of DNS Proxy is recommended in situations where it is not possible to fo
 
 # Installing
 
-`pip install dnschef`
+Install latest version using pipx:
 
+`pipx install git+https://github.com/byt3bl33d3r/dnschef-ng.git`
+
+Install latest version using pipx with the deps for the HTTP API:
+`pipx install "git+https://github.com/byt3bl33d3r/dnschef-ng.git#egg=dnschef-ng[api]"`
+
+> [!WARNING]
+> I haven't uploaded the package PyPi yet so the below doesn't work for now.
+
+`pip install dnschef`
 
 If you want the HTTP API (requires some extra dependencies):
     

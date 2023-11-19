@@ -1,4 +1,4 @@
-FROM python:3.10-slim as build-stage
+FROM python:3.11-slim as build-stage
 
 WORKDIR /tmp/code
 
