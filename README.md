@@ -22,7 +22,7 @@ The use of DNS Proxy is recommended in situations where it is not possible to fo
 # New Features 
 
 - Requires Python 3.11+
-- Supports staging files over DNS (A,AAAA,TXT for now...)
+- Supports staging files over DNS (only over `A`,`AAAA`,`TXT` for now...)
 - Config file is now TOML
 - Optional HTTP API (allows you to query logs and update config remotely)
 - Fully async for increased performance (uses AsyncIO)
