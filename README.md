@@ -342,7 +342,7 @@ DNSChef can "stage" any file through DNS. Currently file staging is only support
 > [!NOTE]
 > The `chunk_size` setting is optional and it's behavior is highly dependent on the query type. Example: As `A` queries return an IPv4 address, the maximum allowed `chunk_size` is 4 bytes. Setting the `chunk_size` to anything above 4 will be ignored.
 
-An `A` query to `*.wat.org` containing a number in the DNS name will now return the corresponding chunk of the file. E.g the query `ns0.wat.org` will return an IPv4 address containing the first chunk of the file (4 bytes). A query for `test2.wat.org` will return the second chunk of the file etc...
+An `A` query to `*.wat.org` containing a number in the DNS name will now return the corresponding chunk of the file. E.g the query `ns0.wat.org` will return an IPv4 address containing the first chunk of the file (4 bytes). A query for `test1.wat.org` will return the second chunk of the file etc...
 
 When using wildcard domains like the above examples, the "chunk" numbers can be placed anywhere  and don't have to be put together. E.g an `A` query for `1aliens2.wat.org` will return the 12th chunk of the file.
 
@@ -373,7 +373,7 @@ docusign=test-<BASE64_ENCODED_FILE_CHUNK_N1>
 If you perform another `TXT` query (e.g. `ns10.dungbeetle.org`), you'll see that the prefix will change:
 
 ```
-docusign=test-<BASE64_ENCODED_FILE_CHUNK_N10>
+atlassian-domain-verification=test-<BASE64_ENCODED_FILE_CHUNK_N10>
 ```
 
 ## Advanced Filtering
