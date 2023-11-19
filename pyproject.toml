@@ -30,9 +30,8 @@ pydantic-settings = "^2.0.3"
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.2"
 pytest-asyncio = "^0.21.1"
-flake8 = "^6.1.0"
-black = "^23.9.1"
 poetry-plugin-export = "^1.6.0"
+ruff = "^0.1.6"
 
 [build-system]
 requires = ["poetry-core"]

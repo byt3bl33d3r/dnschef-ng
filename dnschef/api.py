@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     ipv6: bool = False
     tcp: bool = False
     port: int = 53
-    configfile: FilePath = "dnschef.ini"
+    configfile: FilePath = "dnschef.toml"
 
 settings = Settings()
 app = FastAPI(
