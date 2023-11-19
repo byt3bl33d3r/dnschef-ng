@@ -17,7 +17,7 @@ import functools
 import random
 import time
 
-CONFIG = dict()
+CONFIG = {r: {} for r in RDMAP.keys()}
 
 def chunk_string(string_to_chunk: str, chunk_size: int):
     data = io.StringIO(string_to_chunk)
@@ -297,7 +297,7 @@ def findnametodns(qname, qtype):
 
     matched_domains = [
         k for k,_ in CONFIG[qtype].items() 
-        if qname.count('.') == k.count('.') and fnmatch.fnmatch(qname, k)
+        if (k == '*' or qname.count('.') == k.count('.')) and fnmatch.fnmatch(qname, k)
     ]
 
     if matched_domains:
