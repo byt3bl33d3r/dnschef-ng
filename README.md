@@ -19,7 +19,7 @@ There are several DNS Proxies out there. Most will simply point all DNS queries 
 
 The use of DNS Proxy is recommended in situations where it is not possible to force an application to use some other proxy server directly. For example, some mobile applications completely ignore OS HTTP Proxy settings. In these cases, the use of a DNS proxy server such as DNSChef will allow you to trick that application into forwarding connections to the desired destination.
 
-# New Features 
+## New Features 
 
 - Requires Python 3.11+
 - Supports staging files over DNS (only over `A`,`AAAA`,`TXT` for now...)
@@ -31,7 +31,7 @@ The use of DNS Proxy is recommended in situations where it is not possible to fo
 - Dockerized
 - Includes a number of the PRs and fixes from the original repo
 
-# Installing
+## Installing
 
 Install latest version using pipx:
 
@@ -50,7 +50,7 @@ If you want the HTTP API (requires some extra dependencies):
     
     pip install dnschef[api]
 
-# Setting up a DNS Proxy
+## Setting up a DNS Proxy
 
 Before you can start using DNSChef, you must configure your machine to use a DNS nameserver with the tool running on it. You have several options based on the operating system you are going to use:
 
@@ -68,9 +68,9 @@ If you do not have the ability to modify device's DNS settings manually, then yo
 
 At last you need to configure a fake service where DNSChef will point all of the requests. For example, if you are trying to intercept web traffic, you must bring up either a separate web server running on port 80 or set up a web proxy (e.g. Burp) to intercept traffic. DNSChef will point queries to your proxy/server host with properly configured services.
 
-# Running DNSChef
+## Running DNSChef
 
-DNSChef is a cross-platform application developed in Python which should run on most platforms which have a Python interpreter. You can use the supplied *dnschef.exe* executable to run it on Windows hosts without installing a Python interpreter. This guide will concentrate on Unix environments; however, all of the examples below were tested to work on Windows as well.
+DNSChef is a cross-platform application developed in Python which should run on most platforms which have a Python interpreter. This guide will concentrate on Unix environments; however, all of the examples below were tested to work on Windows as well.
 
 Let's get a taste of DNSChef with its most basic monitoring functionality. Execute the following command as root (required to start a server on port 53):
 
@@ -120,7 +120,7 @@ DNSChef has full support for IPv6 which can be activated using *-6* or *--ipv6**
 
 NOTE: By default, DNSChef creates a UDP listener. You can use TCP instead with the *--tcp* argument discussed later.
 
-# Running the DNSChef HTTP API
+## Running the DNSChef HTTP API
 
 > [!WARNING]
 > The API has no authentication. Allow/deny access at the network level through security groups, iptables, firewall etc..
@@ -150,7 +150,7 @@ INFO:     Application startup complete.
 INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
 ```
 
-# Intercept all responses
+## Intercept all responses
 
 Now, that you know how to start DNSChef let's configure it to fake all replies to point to 127.0.0.1 using the *--fakeip* parameter:
 
@@ -232,7 +232,7 @@ DNS ANY record queries results in DNSChef returning every faked record that it k
     google.com is an alias for www.fake.com.
     google.com name server ns.fake.com.
 
-# Filtering domains
+## Filtering domains
 
 
 Using the above example, consider you only want to intercept requests for *thesprawl.org* and leave queries to all other domains such as *webfaction.com* without modification. You can use the *--fakedomains* parameter as illustrated below:
@@ -248,7 +248,7 @@ From the above example the request for *thesprawl.org* was faked; however, the r
 
 **NOTE**: DNSChef will not verify whether the domain exists or not before faking the response. If you have specified a domain it will always resolve to a fake value whether it really exists or not.
 
-# Reverse filtering
+## Reverse filtering
 
 In another situation you may need to fake responses for all requests except a defined list of domains. You can accomplish this task using the *--truedomains* parameter as follows:
 
@@ -263,20 +263,22 @@ There are several things going on in the above example. First notice the use of 
 
 **NOTE**: Wildcards are position specific. A mask of type *.thesprawl.org will match www.thesprawl.org but not www.test.thesprawl.org. However, a mask of type *.*.thesprawl.org will match thesprawl.org, www.thesprawl.org and www.test.thesprawl.org.
 
-# External definitions file
+## External definitions file
 
 There may be situations where defining a single fake DNS record for all matching domains may not be sufficient. You can use an external file with a collection of DOMAIN=RECORD pairs defining exactly where you want the request to go.
 
-For example, let create the following definitions file and call it *dnschef.ini*:
+For example, let create the following definitions file and call it `dnschef.toml`:
 
-    [A]
-    *.google.com=192.0.2.1
-    thesprawl.org=192.0.2.2
-    *.wordpress.*=192.0.2.3
+```toml
+[A]
+"*.google.com"="192.0.2.1"
+"thesprawl.org"="192.0.2.2"
+"*.wordpress.*"="192.0.2.3"
+```
 
-Notice the section header [A], it defines the record type to DNSChef. Now let's carefully observe the output of multiple queries:
+Notice the section header `[A]`, it defines the record type to DNSChef. Now let's carefully observe the output of multiple queries:
 
-    # ./dnschef.py --file dnschef.ini -q
+    # ./dnschef.py --file dnschef.toml -q
     [*] DNSChef started on interface: 127.0.0.1 
     [*] Using the following nameservers: 8.8.8.8
     [+] Cooking A replies for domain *.google.com with '192.0.2.1'
@@ -292,14 +294,16 @@ Notice the section header [A], it defines the record type to DNSChef. Now let's 
 
 Both *google.com* and *www.google.com* matched the *\*.google.com* entry and correctly resolved to *192.0.2.1*. On the other hand *www.thesprawl.org* request was simply proxied instead of being modified. At last all variations of *wordpress.com*, *www.wordpress.org*, etc. matched the *\*.wordpress.\** mask and correctly resolved to *192.0.2.3*. At last an undefined *slashdot.org* query was simply proxied with a real response.
 
-You can specify section headers for all other supported DNS record types including the ones not explicitly exposed on the command line: [A], [AAAA], [MX], [NS], [CNAME], [PTR], [NAPTR] and [SOA]. For example, let's define a new [PTR] section in the 'dnschef.ini' file:
+You can specify section headers for all other supported DNS record types including the ones not explicitly exposed on the command line: [A], [AAAA], [MX], [NS], [CNAME], [PTR], [NAPTR] and [SOA]. For example, let's define a new [PTR] section in the `dnschef.toml` file:
 
-    [PTR]
-    *.2.0.192.in-addr.arpa=fake.com
+```toml
+[PTR]
+"*.2.0.192.in-addr.arpa"="fake.com"
+```
 
 Let's observe DNSChef's behavior with this new record type:
 
-     ./dnschef.py --file dnschef.ini -q
+     ./dnschef.py --file dnschef.toml -q
     [sudo] password for iphelix: 
     [*] DNSChef started on interface: 127.0.0.1 
     [*] Using the following nameservers: 8.8.8.8
@@ -313,19 +317,70 @@ And here is what a client might see when performing reverse DNS queries:
 
 Some records require exact formatting. Good examples are SOA and NAPTR
 
-    [SOA]
-    *.thesprawl.org=ns.fake.com. hostmaster.fake.com. 1 10800 3600 604800 3600
+```toml
+[SOA]
+"*.thesprawl.org" = "ns.fake.com. hostmaster.fake.com. 1 10800 3600 604800 3600"
 
-    [NAPTR]
-    *.thesprawl.org=100 10 U E2U+sip !^.*$!sip:customer-service@fake.com! .
+[NAPTR]
+"*.thesprawl.org" = "100 10 U E2U+sip !^.*$!sip:customer-service@fake.com! ."
+```
 
-See sample dnschef.ini file for additional examples.
+See sample `dnschef.toml` file for additional examples.
 
-# Advanced Filtering
+## File Staging
 
-You can mix and match input from a file and command line. For example the following command uses both *--file* and *--fakedomains* parameters:
+DNSChef can "stage" any file through DNS. Currently file staging is only supported with `A`, `AAAA` and `TXT` records (will be adding more). To instruct DNSChef to stage a file, add the following section to your `dnschef.toml`:
 
-    # ./dnschef.py --file dnschef.ini --fakeip 6.6.6.6 --fakedomains=thesprawl.org,slashdot.org -q
+```toml
+[A]
+"*.wat.org" = { file = "/home/payload.exe", chunk_size = 4 }
+
+[AAAA]
+"*.gorgetowngeronimos.org" = { file = "/home/payload.exe", chunk_size = 16 }
+```
+
+> [!NOTE]
+> The `chunk_size` setting is optional and it's behavior is highly dependent on the query type. Example: As `A` queries return an IPv4 address, the maximum allowed `chunk_size` is 4 bytes. Setting the `chunk_size` to anything above 4 will be ignored.
+
+An `A` query to `*.wat.org` containing a number in the DNS name will now return the corresponding chunk of the file. E.g the query `ns0.wat.org` will return an IPv4 address containing the first chunk of the file (4 bytes). A query for `test2.wat.org` will return the second chunk of the file etc...
+
+When using wildcard domains like the above examples, the "chunk" numbers can be placed anywhere  and don't have to be put together. E.g an `A` query for `1aliens2.wat.org` will return the 12th chunk of the file.
+
+
+`TXT` records support additional options for file staging as they allow more flexibility:
+
+```toml
+[TXT]
+"ns*.dungbeetle.org" = { file = "~/payload.exe", chunk_size = 189, response_format = "{prefix}test-{chunk}", response_prefix_pool = ["atlassian-domain-verification=", "onetrust-domain-verification=", "docusign=" ] }
+```
+
+With this configuration, any `TXT` query to `ns*.dungbeetle.org` will return a chunk of our file located locally on the filesystem at `~/payload.exe`.
+
+The `response_format` and `response_prefix_pool` settings are optional but allow you to further customize the DNS `TXT` response.
+
+The `response_format` setting defines the format of the `TXT` response: 
+
+- The `{prefix}` variable will be randomly substituted with one of the values defined in the `response_prefix_pool` array.
+
+- The `{chunk}` variable will be replaced with the file chunk.
+
+With the above configuration, a `TXT` query to `ns1.dungbeetle.org` will return the following response:
+
+```
+docusign=test-<BASE64_ENCODED_FILE_CHUNK_N1>
+```
+
+If you perform another `TXT` query (e.g. `ns10.dungbeetle.org`), you'll see that the prefix will change:
+
+```
+docusign=test-<BASE64_ENCODED_FILE_CHUNK_N10>
+```
+
+## Advanced Filtering
+
+You can mix and match input from a file and command line. For example the following command uses both `--file` and `--fakedomains` parameters:
+
+    # ./dnschef.py --file dnschef.toml --fakeip 6.6.6.6 --fakedomains=thesprawl.org,slashdot.org -q
     [*] DNSChef started on interface: 127.0.0.1 
     [*] Using the following nameservers: 8.8.8.8
     [+] Cooking A replies for domain *.google.com with '192.0.2.1'
@@ -338,9 +393,9 @@ You can mix and match input from a file and command line. For example the follow
     [00:49:31] 127.0.0.1: cooking the response of type 'A' for thesprawl.org to 6.6.6.6
     [00:50:08] 127.0.0.1: proxying the response of type 'A' for tor.com
 
-Notice the definition for *thesprawl.org* in the command line parameter took precedence over *dnschef.ini*. This could be useful if you want to override values in the configuration file. slashdot.org still resolves to the fake IP address because it was specified in the *--fakedomains* parameter. tor.com request is simply proxied since it was not specified in either command line or the configuration file.
+Notice the definition for *thesprawl.org* in the command line parameter took precedence over *dnschef.toml*. This could be useful if you want to override values in the configuration file. slashdot.org still resolves to the fake IP address because it was specified in the *--fakedomains* parameter. tor.com request is simply proxied since it was not specified in either command line or the configuration file.
 
-# Other configurations
+## Other configurations
 
 For security reasons, DNSChef listens on a local 127.0.0.1 (or ::1 for IPv6) interface by default. You can make DNSChef listen on another interface using the *--interface* parameter:
 
@@ -375,7 +430,7 @@ It is possible to specify non-standard nameserver port using IP#PORT notation:
     [*] No parameters were specified. Running in full proxy mode
     [02:03:12] 127.0.0.1: proxying the response of type 'A' for thesprawl.org
 
-At the same time it is possible to start DNSChef itself on an alternative port using the *-p port#* parameter:
+At the same time it is possible to start DNSChef itself on an alternative port using the `-p port#` parameter:
 
     # ./dnschef.py -p 5353 -q
     [*] Listening on an alternative port 5353
@@ -383,17 +438,4 @@ At the same time it is possible to start DNSChef itself on an alternative port u
     [*] Using the following nameservers: 8.8.8.8
     [*] No parameters were specified. Running in full proxy mode
 
-DNS protocol can be used over UDP (default) or TCP. DNSChef implements a TCP mode which can be activated with the *--tcp* flag.
-
-# Internal architecture
-
-Here is some information on the internals in case you need to adapt the tool for your needs. DNSChef is built on top of the SocketServer module and uses threading to help process multiple requests simultaneously. The tool is designed to listen on TCP or UDP ports (default is port 53) for incoming requests and forward those requests when necessary to a real DNS server over UDP.
-
-The excellent [dnslib library](https://bitbucket.org/paulc/dnslib/wiki/Home) is used to dissect and reassemble DNS packets. It is particularly useful when generating response packets based on queries.
-
-DNSChef is capable of modifing queries for records of type "A", "AAAA", "MX", "CNAME", "NS", "TXT", "PTR", "NAPTR", "SOA", "ANY". It is very easy to expand or modify behavior for any record. Simply add another **if qtype == "RECORD TYPE")** entry and tell it what to reply with.
-
-Enjoy the tool and forward all requests and comments to iphelix [at] thesprawl.org.
-
-Happy hacking!
- -Peter
+DNS protocol can be used over UDP (default) or TCP. DNSChef implements a TCP mode which can be activated with the `--tcp` flag.
