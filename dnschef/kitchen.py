@@ -159,7 +159,7 @@ class DNSKitchen:
         sig_inc = int(time.mktime(time.strptime(sig_inc + 'GMT', "%Y%m%d%H%M%S%Z")))
         key_tag = int(key_tag)
         if name[-1] == '.': name = name[:-1]
-        sig = base64.b64decode(("".join(sig)).encode('ascii'))
+        sig = base64.b64decode( ("".join(sig)).encode('ascii') )
 
         return RR(qname, getattr(QTYPE, qtype), rdata=RDMAP[qtype](covered, algorithm, labels, orig_ttl, sig_exp, sig_inc, key_tag, name, sig))
 
@@ -197,7 +197,7 @@ class DNSServerProtocol:
 
     def data_received(self, data, addr):
         pass
-        #self.datagram_received(data, addr)
+       # return self.datagram_received(data, addr)
 
     def send_response(self, coro, response, addr):
         response.add_answer(coro.result())
