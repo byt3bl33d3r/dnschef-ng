@@ -33,6 +33,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from dnschef import kitchen
+from dnschef.protocols import start_server
 
 from dnschef.logger import log, plain_formatter, debug_formatter
 from dnschef.utils import header, parse_config_file
@@ -202,7 +203,7 @@ def main():
         log.addHandler(fh)
 
     # Launch DNSChef
-    asyncio.run(kitchen.start_cooking(
+    asyncio.run(start_server(
         interface=options.interface,
         nameservers=nameservers,
         tcp=options.tcp,
