@@ -3,7 +3,7 @@
 
 ``` 
      _                _           __                    
-    | | version 0.6  | |         / _|                   
+    | |  v0.7        | |         / _|                   
   __| |_ __  ___  ___| |__   ___| |_ ______ _ __   __ _ 
  / _` | '_ \/ __|/ __| '_ \ / _ \  _|______| '_ \ / _` |
 | (_| | | | \__ \ (__| | | |  __/ |        | | | | (_| |
@@ -33,22 +33,22 @@ The use of DNS Proxy is recommended in situations where it is not possible to fo
 
 ## Installing
 
-Install latest version using pipx:
+To install the latest release you should use [pipx](https://pypa.github.io/pipx/) (unless you're a piece of shit who enjoys sloppy stakes):
 
-     pipx install git+https://github.com/byt3bl33d3r/dnschef-ng.git
-
-Install latest version using pipx with the deps for the HTTP API:
-
-     pipx install "git+https://github.com/byt3bl33d3r/dnschef-ng.git#egg=dnschef-ng[api]"
-
-> [!WARNING]
-> I haven't uploaded the package PyPi yet so the below doesn't work for now.
-
-`pip install dnschef`
+    pipx install dnschef
 
 If you want the HTTP API (requires some extra dependencies):
     
-    pip install dnschef[api]
+    pipx install dnschef[api]
+
+Install latest version from Git using pipx:
+
+     pipx install git+https://github.com/byt3bl33d3r/dnschef-ng.git
+
+Install latest version from Git using pipx with the deps for the HTTP API:
+
+     pipx install "git+https://github.com/byt3bl33d3r/dnschef-ng.git#egg=dnschef-ng[api]"
+
 
 ## Setting up a DNS Proxy
 
