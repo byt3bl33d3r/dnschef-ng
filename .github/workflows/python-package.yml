@@ -29,7 +29,7 @@ jobs:
         python -m pip install --upgrade pip
         python3 -m pip install --user pipx
         pipx install poetry
-        poetry install
+        poetry install --all-extras
     - name: Lint with ruff
       run: |
         # stop the build if there are Python syntax errors or undefined names
