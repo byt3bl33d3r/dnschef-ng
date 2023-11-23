@@ -13,11 +13,30 @@ classifiers = [
 ]
 exclude = ["tests"]
 
+[tool.poetry.scripts]
+dnschef = 'dnschef.__main__:main'
+dnschef-ng = 'dnschef.__main__:main'
+
 [tool.poetry.dependencies]
 python = "^3.11"
 dnslib = "^0.9.23"
 rich = "^13.5.3"
 structlog = "^23.1.0"
+fastapi = { version = "^0.103.1", optional = true }
+uvicorn = { version = "^0.23.2", optional = true }
+pydantic-settings = { version = "^2.0.3", optional = true }
+
+[tool.poetry.extras]
+api = ["fastapi", "uvicorn", "pydantic-settings"]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.2"
+pytest-asyncio = "^0.21.1"
+poetry-plugin-export = "^1.6.0"
+ruff = "^0.1.6"
+dnspython = "^2.4.2"
+pytest-cov = "^4.1.0"
+httpx = "^0.25.1"
 
 [tool.pytest.ini_options]
 addopts = "--cov=dnschef"
@@ -29,24 +48,6 @@ filterwarnings = [
     # note the use of single quote below to denote "raw" strings in TOML
     'ignore:`general_plain_validator_function` is deprecated',
 ]
-
-[tool.poetry.scripts]
-dnschef = 'dnschef.__main__:main'
-dnschef-ng = 'dnschef.__main__:main'
-
-[tool.poetry.group.api.dependencies]
-fastapi = "^0.103.1"
-uvicorn = "^0.23.2"
-pydantic-settings = "^2.0.3"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^7.4.2"
-pytest-asyncio = "^0.21.1"
-poetry-plugin-export = "^1.6.0"
-ruff = "^0.1.6"
-dnspython = "^2.4.2"
-pytest-cov = "^4.1.0"
-httpx = "^0.25.1"
 
 [build-system]
 requires = ["poetry-core"]

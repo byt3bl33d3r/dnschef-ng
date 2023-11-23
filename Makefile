@@ -19,5 +19,5 @@ tests:
 
 requirements:
 	poetry export -f requirements.txt > requirements.txt
-	poetry export -f requirements.txt --with=api > requirements-api.txt
-	poetry export -f requirements.txt --with=api,dev > requirements-dev.txt
+	poetry export -f requirements.txt --extras=api > requirements-api.txt
+	poetry export -f requirements.txt --with=dev > requirements-dev.txt
