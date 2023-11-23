@@ -34,5 +34,6 @@ jobs:
         pipx install poetry
     - name: Build and publish package
       run: |
+        poetry config pypi-token.testpypi ${{ secrets.PYPI_TESTING_API_TOKEN }}
         poetry config repositories.testpypi https://test.pypi.org/legacy/
         poetry publish -r testpypi --build
