@@ -35,11 +35,11 @@ The use of DNS Proxy is recommended in situations where it is not possible to fo
 
 To install the latest release you should use [pipx](https://pypa.github.io/pipx/) (unless you're a piece of shit who enjoys sloppy stakes):
 
-    pipx install dnschef
+    pipx install dnschef-ng
 
 If you want the HTTP API (requires some extra dependencies):
     
-    pipx install dnschef[api]
+    pipx install dnschef-ng[api]
 
 Install latest version from Git using pipx:
 
