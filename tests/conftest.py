@@ -29,13 +29,7 @@ def event_loop():
 async def dns_client():
     resolver = dns.asyncresolver.Resolver()
     resolver.nameservers = ['127.0.0.1']
-    yield resolver
-
-@pytest_asyncio.fixture(scope="session")
-async def alt_port_dns_client():
-    resolver = dns.asyncresolver.Resolver()
-    resolver.nameservers = ['127.0.0.1']
-    resolver.port = 54
+    resolver.port = 5553
     yield resolver
 
 @pytest.fixture(scope="session")
@@ -52,7 +46,7 @@ async def start_dnschef(config_file):
             nameservers=["8.8.8.8"],
             tcp=True,
             ipv6=False,
-            port=53
+            port=5553
     ))
 
     yield
