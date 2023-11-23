@@ -22,7 +22,6 @@ def test_delete_record(api_test_client):
         url="/",
         content=json.dumps({"type": "A", "domain": "*.nashvillenibblers.com", "value": "192.168.69.69"}).encode()
     )
-
     assert r.status_code == 200
 
     r = api_test_client.get("/")
@@ -44,7 +43,6 @@ def test_logs(api_test_client):
         "/logs",
         params={"name": "fuck.shit.com"}
     )
-
     assert r.status_code == 200
     assert len(r.json())
 
@@ -52,6 +50,5 @@ def test_logs(api_test_client):
         "/logs",
         params={"name": "fuck.shit.com", "type": "A"}
     )
-
     assert r.status_code == 200
     assert len(r.json())

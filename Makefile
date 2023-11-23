@@ -14,7 +14,7 @@ clean:
 	find . -name '.pytest_cache' -exec rm -rf {} +
 
 tests:
-	flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+	ruff --select=E9,F63,F7,F82 --show-source .
 	python -m pytest
 
 requirements:

@@ -11,7 +11,7 @@ from dnschef import kitchen
 from dnschef.api import app
 from dnschef.protocols import start_server
 from dnschef.utils import parse_config_file
-from dnschef.logger import log, debug_formatter, json_capture_formatter
+from dnschef.logger import log, json_capture_formatter #,debug_formatter
 from fastapi.testclient import TestClient
 
 #log.setLevel(logging.DEBUG)
