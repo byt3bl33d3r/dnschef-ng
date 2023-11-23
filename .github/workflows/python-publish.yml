@@ -1,9 +1,9 @@
-name: Upload Package to PyPi Testing
+name: Upload Package to PyPi
 
 on:
+  release:
+    types: [published]
   workflow_dispatch:
-  #release:
-  #  types: [published]
 
 permissions:
   contents: read
@@ -26,6 +26,6 @@ jobs:
         pipx install poetry
     - name: Build and publish package
       run: |
-        poetry config pypi-token.testpypi ${{ secrets.PYPI_TESTING_API_TOKEN }}
-        poetry config repositories.testpypi https://test.pypi.org/legacy/
-        poetry publish -r testpypi --build
+        poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
+        poetry config repositories.testpypi https://pypi.org/legacy/
+        poetry publish -r pypi --build
