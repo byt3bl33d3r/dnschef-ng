@@ -33,10 +33,10 @@ jobs:
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
-        ruff --select=E9,F63,F7,F82 --exit-zero --statistics .
-        ruff --select=E9,F63,F7,F82 --show-source .
+        poetry run ruff --select=E9,F63,F7,F82 --exit-zero --statistics .
+        poetry run ruff --select=E9,F63,F7,F82 --show-source .
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        ruff --exit-zero --statistics
+        poetry run ruff --exit-zero --statistics
     - name: Test with pytest
       run: |
-        pytest
+        poetry run pytest
