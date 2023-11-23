@@ -180,45 +180,27 @@ class DNSKitchen:
             #return { qtype: { k:v for k,v in CONFIG[qtype].items() if k == top_matched_domains[0] } }
             return CONFIG[qtype][top_matched_domains[0]]
 
-    async def we_cookin(self, logger, data, addr):
-        try:
-            d = DNSRecord.parse(data)
-        except Exception:
-            logger.error("invalid DNS request")
+    async def we_cookin(self, logger, d, qtype, qname, addr):
+        # Create a custom response to the query
+        response = DNSRecord(
+            DNSHeader(id=d.header.id, bitmap=d.header.bitmap, qr=1, aa=1, ra=1), 
+            q=d.q
+        )
 
-        else:
-            # Only Process DNS Queries
-            if QR[d.header.qr] == "QUERY":
+        cooked_reply = self.findnametodns(qname, qtype)
 
-                qtype = QTYPE[d.q.qtype]
-                # Create a custom response to the query
-                response = DNSRecord(
-                    DNSHeader(id=d.header.id, bitmap=d.header.bitmap, qr=1, aa=1, ra=1), 
-                    q=d.q
-                )
+        # Check if there is a fake record for the current request qtype
+        if CONFIG.get(qtype) and cooked_reply:
+            logger.info("cooking response")
 
-                # Gather query parameters
-                # NOTE: Do not lowercase qname here, because we want to see
-                #       any case request weirdness in the logs.
-                qname = str(d.q.qname)
+            response_func = getattr(
+                self,
+                f"do_{qtype}",
+                self.do_default
+            )
 
-                # Chop off the last period
-                if qname[-1] == '.': qname = qname[:-1]
+            response.add_answer(
+                (await response_func(addr, qname, qtype, cooked_reply))
+            )
 
-                cooked_reply = self.findnametodns(qname, qtype)
-
-                # Check if there is a fake record for the current request qtype
-                if CONFIG.get(qtype) and cooked_reply:
-                    logger.info("cooking response", type=qtype, name=qname) #record=record)
-
-                    response_func = getattr(
-                        self,
-                        f"do_{qtype}",
-                        self.do_default
-                    )
-
-                    response.add_answer(
-                        (await response_func(addr, qname, qtype, cooked_reply))
-                    )
-
-                    return response
+            return response

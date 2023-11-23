@@ -8,16 +8,26 @@ import string
 import dns.asyncresolver
 
 from dnschef import kitchen
+from dnschef.api import app
 from dnschef.protocols import start_server
 from dnschef.utils import parse_config_file
-from dnschef.logger import log, debug_formatter
+from dnschef.logger import log, debug_formatter, json_capture_formatter
+from fastapi.testclient import TestClient
 
-log.setLevel(logging.DEBUG)
-log.handlers[0].setFormatter(debug_formatter)
+#log.setLevel(logging.DEBUG)
+#log.handlers[0].setFormatter(debug_formatter)
+
+jh = logging.StreamHandler()
+jh.setFormatter(json_capture_formatter)
+log.addHandler(jh)
 
 @pytest.fixture
 def random_string():
     return ''.join(random.choices(string.ascii_letters, k=6))
+
+@pytest.fixture
+def api_test_client():
+    return TestClient(app)
 
 @pytest.fixture(scope="session")
 def event_loop():

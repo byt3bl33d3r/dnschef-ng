@@ -1,5 +1,6 @@
 from dnschef import __version__
 from dnschef import kitchen
+from dnschef.protocols import start_server
 from dnschef.utils import header, parse_config_file
 from dnschef.logger import (
     log,
@@ -58,7 +59,7 @@ async def startup_event():
 
     # Launch DNSChef
     asyncio.create_task(
-        kitchen.start_cooking(
+        start_server(
             interface=settings.interface,
             nameservers=settings.nameservers,
             tcp=settings.tcp,

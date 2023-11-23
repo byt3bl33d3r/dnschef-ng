@@ -4,7 +4,7 @@ from dnschef.logger import log
 from dnslib import RDMAP
 
 header  = "          _                _          __  \n"
-header += "         | | version {}  | |        / _| \n".format(__version__)
+header += "         | |  v{}      | |        / _| \n".format(__version__)
 header += "       __| |_ __  ___  ___| |__   ___| |_ \n"
 header += "      / _` | '_ \/ __|/ __| '_ \ / _ \  _|\n"
 header += "     | (_| | | | \__ \ (__| | | |  __/ |  \n"

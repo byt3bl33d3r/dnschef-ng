@@ -24,6 +24,10 @@ log_cli = false
 log_cli_level = "INFO"
 log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
 log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+filterwarnings = [
+    # note the use of single quote below to denote "raw" strings in TOML
+    'ignore:`general_plain_validator_function` is deprecated',
+]
 
 [tool.poetry.scripts]
 dnschef = 'dnschef.__main__:main'
@@ -41,6 +45,7 @@ poetry-plugin-export = "^1.6.0"
 ruff = "^0.1.6"
 dnspython = "^2.4.2"
 pytest-cov = "^4.1.0"
+httpx = "^0.25.1"
 
 [build-system]
 requires = ["poetry-core"]
