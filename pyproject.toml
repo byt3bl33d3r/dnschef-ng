@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dnschef-ng"
-version = "0.7.1"
+version = "0.7.2"
 description = "A highly configurable DNS proxy for Penetration Testers and Malware Analysts"
 authors = ["iphelix <iphelix@thesprawl.org>","byt3bl33d3r <byt3bl33d3r@pm.me>"]
 readme = "README.md"
