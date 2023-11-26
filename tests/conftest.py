@@ -26,6 +26,14 @@ def random_string():
     return ''.join(random.choices(string.ascii_letters, k=6))
 
 @pytest.fixture
+def random_string_gen():
+    def _random_gen():
+        while True:
+            yield ''.join(random.choices(string.ascii_letters, k=6))
+
+    return _random_gen()
+
+@pytest.fixture
 def api_test_client():
     return TestClient(app)
 

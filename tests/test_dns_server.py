@@ -35,10 +35,10 @@ async def test_correct_wildcard_behavior(dns_client):
         assert answers[0].address == "1.1.2.2"
 
         answers = await dns_client.resolve("wa1.aint.nothing.org", "TXT", tcp=proto)
-        assert answers[0].to_text().strip('"') == 'sequoia banshee buggers'
+        assert answers[0].to_text().strip('"') == 'sequoia banshee boogers'
 
         answers = await dns_client.resolve("wattahog.aint.nothing.org", "TXT", tcp=proto)
-        assert answers[0].to_text().strip('"') == 'sequoia banshee buggers'
+        assert answers[0].to_text().strip('"') == 'sequoia banshee boogers'
 
 
 @pytest.mark.asyncio

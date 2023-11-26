@@ -37,7 +37,7 @@ def get_file_chunk(file_path, chunk_index, chunk_size):
     return next(itertools.islice(
         chunk_file(file_path, chunk_size),
         chunk_index,
-        chunk_index+1
+        chunk_index + 1
     ), b'')
 
 
@@ -65,28 +65,36 @@ class DNSKitchen:
                 log.warning(f"chunk_size {chunk_size} is too large for A record, defaulting to 4")
                 chunk_size = 4
 
-            file_chunk = await stage_file(qname, record, chunk_size)
-            if file_chunk:
-                record = file_chunk
+            record = await stage_file(qname, record, chunk_size)
+            if record and len(record) < 4: 
+                record = record.ljust(4, b'\x00')
 
-        ipv4_hex_tuple = list(map(int, IPv4Address(record).packed))
-        return RR(qname, getattr(QTYPE, qtype), rdata=RDMAP[qtype](ipv4_hex_tuple))
+        if record:
+            ipv4_hex_tuple = list(map(int, IPv4Address(record).packed))
+            return RR(qname, getattr(QTYPE, qtype), rdata=RDMAP[qtype](ipv4_hex_tuple))
 
     async def do_TXT(self, addr, qname, qtype, record):
         if isinstance(record, dict):
-            prefix = random.choice(record.get('response_prefix_pool'))
-            response_format = record.get('response_format')
+            chunk_size = record.get('chunk_size')
+            prefix = random.choice(record.get('response_prefix_pool', ['']))
+            response_format = record.get('response_format', '{prefix}{chunk}')
 
             space_left = 255 - len(response_format.format(prefix=prefix, chunk=''))
             max_data_len = ( space_left // 4 ) * 3
 
-            file_chunk = await stage_file(qname, record, chunk_size=max_data_len)
-            if file_chunk:
-                record = response_format.format(prefix=prefix, chunk=base64.b64encode(file_chunk).decode())
+            if chunk_size:
+                max_data_len = min(chunk_size, max_data_len)
+                if chunk_size > max_data_len:
+                    log.warning(f"chunk_size {chunk_size} is too large for the TXT record, defaulting to {max_data_len}")
 
-        # dnslib doesn't like trailing dots
-        if record[-1] == ".": record = record[:-1]
-        return RR(qname, getattr(QTYPE, qtype), rdata=RDMAP[qtype](record))
+            record = await stage_file(qname, record, chunk_size=max_data_len)
+            if record:
+                record = response_format.format(prefix=prefix, chunk=base64.b64encode(record).decode())
+
+        if record:
+            # dnslib doesn't like trailing dots
+            record = record.rstrip('.')
+            return RR(qname, getattr(QTYPE, qtype), rdata=RDMAP[qtype](record))
 
     async def do_AAAA(self, addr, qname, qtype, record):
         if isinstance(record, dict):
@@ -95,12 +103,13 @@ class DNSKitchen:
                 log.warning(f"chunk_size {chunk_size} is too large for AAAA record, defaulting to 16")
                 chunk_size = 16
 
-            file_chunk = await stage_file(qname, record, chunk_size)
-            if file_chunk:
-                record = file_chunk
+            record = await stage_file(qname, record, chunk_size)
+            if record and len(record) < 16:
+                record = record.ljust(16, b'\x00')
 
-        ipv6_hex_tuple = list(map(int, IPv6Address(record).packed))
-        return RR(qname, getattr(QTYPE, qtype), rdata=RDMAP[qtype](ipv6_hex_tuple))
+        if record:
+            ipv6_hex_tuple = list(map(int, IPv6Address(record).packed))
+            return RR(qname, getattr(QTYPE, qtype), rdata=RDMAP[qtype](ipv6_hex_tuple))
 
     async def do_HTTPS(self, addr, qname, qtype, record):
         kv_pairs = record.split(" ")
@@ -199,8 +208,8 @@ class DNSKitchen:
                 self.do_default
             )
 
-            response.add_answer(
-                (await response_func(addr, qname, qtype, cooked_reply))
-            )
+            answer = await response_func(addr, qname, qtype, cooked_reply)
+            if answer:
+                response.add_answer(answer)
 
             return response

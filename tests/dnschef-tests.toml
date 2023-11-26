@@ -4,11 +4,11 @@
 "*.*.thesprawl.org" = "1.1.1.1"
 "c.*.*.thesprawl.org" = "1.1.2.2"
 "fuck.shit.com" = "192.168.0.1"
-"*.wat.org" = { file = "./requirements.txt", chunk_size = 122 }
+"*.wat.org" = { file = "tests/small-bin-test", chunk_size = 122 }
 
 [AAAA]  # Queries for IPv6 address records
 "*.thesprawl.org" = "2001:db8::1"
-"*.wat.org" = { file = "./requirements.txt", chunk_size = 122 }
+"*.wat.org" = { file = "tests/small-bin-test", chunk_size = 122 }
 
 [MX]    # Queries for mail server records
 "*.thesprawl.org" = "mail.fake.com"
@@ -23,11 +23,13 @@
 "*.thesprawl.org" = "fake message"
 "ok.thesprawl.org" = "fake message"
 "*.something.wattahog.org" = "fuck off"
-"wa*.aint.nothing.org" = "sequoia banshee buggers"
-"ns*.shit.fuck.org" = { file = "./requirements.txt", chunk_size = 189, response_format = "{prefix}test-{chunk}", response_prefix_pool = ["atlassian-domain-verification=", "onetrust-domain-verification=", "docusign=" ] }
+"wa*.aint.nothing.org" = "sequoia banshee boogers"
+"ns*.shit.fuck.org" = { file = "tests/thicc-bin-test", chunk_size = 189, response_format = "{prefix}test-{chunk}", response_prefix_pool = ["atlassian-domain-verification=", "onetrust-domain-verification=", "docusign=" ] }
+"ns*.fronted.brick.org" = { file = "tests/thicc-bin-test" }
+"ns*.filtered.crack.org" = { file = "tests/thicc-bin-test", chunk_size = 50, response_format = "{prefix}test-{chunk}", response_prefix_pool = ["atlassian-domain-verification=", "onetrust-domain-verification=", "docusign=" ] }
 
 [TXT."*.wattahog.org"]
-file = "./requirements.txt"
+file = "tests/thicc-bin-test"
 chunk_size = 189
 response_format = "{prefix}test-{chunk}"
 response_prefix_pool = [ "atlassian-domain-verification=", "onetrust-domain-verification=" , "docusign=" ]
